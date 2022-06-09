@@ -4,8 +4,8 @@
     "content": {
         "metaDataVersion": "1.3.0",
         "name": "com.microchip.mcu8.mplabx.project.pic16f17146-curiosity-nano-demo-code-mplab-mcc",
-        "version": " ",
-        "displayName": "",
+        "version": "1.0.0",
+        "displayName": "PIC16F17146 Curiosity Nano Board Demo Code",
         "projectName": "pic16f17146-curiosity-nano-demo-code-mplab-mcc",
         "shortDescription": "This code example demonstrates usage of differential ADCC, OPA, and DAC of PIC16F17146 microcontroller using curiosity nano board.",
         "ide": {
@@ -19,12 +19,12 @@
             }
         ],
         "dfp": {
-            "name": "",
-            "semverRange": ""
+            "name": "PIC16F1xxxx_DFP",
+            "semverRange": "^1.13.178"
         },
         "configurator": {
-            "name": "",
-            "semverRange": ""
+            "name": "MCC",
+            "semverRange": ">=5.1.2"
         },
         "device": {
             "metaDataVersion": "1.0.0",
@@ -36,9 +36,13 @@
                 "versionRange": "*"
             }
         },
-        "author": "Babashree Ingale",
-        "peripherals": [],
-        "keywords": [],
+        "author": "Irene Mary Abraham",
+        "peripherals": [
+		"OPAMP","ADCC","DAC"
+		],
+        "keywords": [
+		"Melody"
+		],
         "additionalData": {
             "longDescription": {
                 "metaDataVersion": "1.0.0",
