@@ -39,8 +39,6 @@
 
 int main(void)
 {
-    LUT_ptr = triangleLUT;
-    
     SYSTEM_Initialize();
 
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts 
@@ -58,24 +56,9 @@ int main(void)
 
     // Disable the Peripheral Interrupts 
     //INTERRUPT_PeripheralInterruptDisable(); 
-        
-    // Set User Interrupt Handler for Switch Press
-    Timer4.TimeoutCallbackRegister(TMR4_UserInterruptHandler);
-     
-    // Set User Interrupt Handler for DAC Update
-    Timer0.TimeoutCallbackRegister(TMR0_UserInterruptHandler);
-
-    // Set User Interrupt Handler for ADC conversion
-    ADCC_SetADTIInterruptHandler(ADCC_UserThresholdInterruptHandler);
     
-    ADPCH = pChannel_OPA1OUT; // Set ADCC positive channel
-            
-    ADNCH = nChannel_DAC2OUT; // Set ADCC negative channel
-       
-    Timer2.Start(); // Start ADCC triggering 
-    
-    Timer0.Start(); // Start updating DAC
-    
+    ApplicationInit();
+           
     while (1)
     {
         Application();

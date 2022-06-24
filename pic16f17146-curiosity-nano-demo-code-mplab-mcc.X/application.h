@@ -19,25 +19,21 @@
     THIS SOFTWARE.
 */
 
-#ifndef CNANO_APPLICATION_H
-#define	CNANO_APPLICATION_H
+#ifndef APPLICATION_H
+#define	APPLICATION_H
 
 #ifdef	__cplusplus
 extern "C"
 {
 #endif
 
-#define NO_OF_POINTS (128)   // Total number of points in one cycle of triangular wave 
+#define NO_OF_POINTS_IN_TRIANGULAR_WAVE (128)   // Total number of points in one cycle of triangular wave 
 
 extern const uint8_t *LUT_ptr;
-extern const uint8_t triangleLUT[NO_OF_POINTS];
+extern const uint8_t triangleLUT[NO_OF_POINTS_IN_TRIANGULAR_WAVE];
 
+void ApplicationInit(void);
 void Application(void);
-void ChangeADCCMode(void);
-void UpdateDac(void);
-void TMR4_UserInterruptHandler(void);
-void TMR0_UserInterruptHandler(void);
-void ADCC_UserThresholdInterruptHandler(void);
 
 #ifdef	__cplusplus
 }
