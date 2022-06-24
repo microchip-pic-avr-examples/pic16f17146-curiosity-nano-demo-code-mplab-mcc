@@ -27,10 +27,10 @@ extern "C"
 {
 #endif
 
-#define NO_OF_POINTS_IN_TRIANGULAR_WAVE (128)   // Total number of points in one cycle of triangular wave 
+#define NO_OF_POINTS_IN_TRIANGULAR_WAVEFORM (128)   // Total number of points in one cycle of triangular waveform 
 
 extern const uint8_t *LUT_ptr;
-extern const uint8_t triangleLUT[NO_OF_POINTS_IN_TRIANGULAR_WAVE];
+extern const uint8_t triangleLUT[NO_OF_POINTS_IN_TRIANGULAR_WAVEFORM];
 
 void ApplicationInit(void);
 void Application(void);

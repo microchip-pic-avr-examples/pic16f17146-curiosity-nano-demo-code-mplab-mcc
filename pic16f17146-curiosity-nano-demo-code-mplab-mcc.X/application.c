@@ -30,11 +30,13 @@ typedef enum{
     ADCC_DIFFERENTIAL_MODE   
 }adcc_mode_t;
 
-void GenerateWave(void);
+void GenerateWaveform(void);
 void UpdateDac(void); 
-inline void ResetTriangularWave(void);
-void DisplayWave(void);
+inline void RestartTriangularWaveformCycle(void);
+void SampleWaveform(void);
+void DisplayWaveform(void);
 void PlotGraphInDataVisualizer(void);
+void ChnageSamplingMethod(void);
 void UpdateADCCMode(void);
 inline adcc_mode_t GetADCCMode(void);
 inline void SetADCCMode(adcc_mode_t adccMode);
@@ -44,14 +46,14 @@ void TMR4_UserInterruptHandler(void);
 void TMR0_UserInterruptHandler(void);
 void ADCC_UserThresholdInterruptHandler(void);
 
-volatile bool isTimeToUpdateWave = false;
-volatile bool isNewDataAvailable = false;
+volatile bool isTimeToUpdateWaveform = false;
+volatile bool isNewSampleDataAvailable = false; 
 volatile bool isSwitchPressed = false;
-uint8_t LUT_pointsCounter = NO_OF_POINTS_IN_TRIANGULAR_WAVE; // Gives the count of points in LUT
+uint8_t LUT_pointsCounter = NO_OF_POINTS_IN_TRIANGULAR_WAVEFORM; // Gives the count of points in LUT
 const uint8_t *LUT_ptr; // Pointer to feed the input to DAC1
 
-// Lookup Table to generate triangular wave 
-const uint8_t triangleLUT[NO_OF_POINTS_IN_TRIANGULAR_WAVE] = {
+// Lookup Table to generate triangular waveform 
+const uint8_t triangleLUT[NO_OF_POINTS_IN_TRIANGULAR_WAVEFORM] = {
     0x4, 0x8, 0xc, 0x10, 0x14, 0x18, 0x1c, 0x20,
     0x24, 0x28, 0x2c, 0x30, 0x34, 0x38, 0x3c, 0x40,
     0x44, 0x48, 0x4c, 0x50, 0x54, 0x58, 0x5c, 0x60,
@@ -74,9 +76,9 @@ const uint8_t triangleLUT[NO_OF_POINTS_IN_TRIANGULAR_WAVE] = {
   @Description
     Configures interrupt handlers
     Configures ADCC channels
-    Reset wave
+    Reset waveform
     Starts ADCC trigger
-    Starts generating wave
+    Starts generating waveform
   @Preconditions
     None
   @Param
@@ -99,7 +101,7 @@ void ApplicationInit(void)
             
     SetADCCNegativeChannel(nChannel_DAC2OUT);
     
-    ResetTriangularWave();
+    RestartTriangularWaveformCycle();
        
     Timer2.Start(); // Start ADCC triggering 
     
@@ -108,7 +110,7 @@ void ApplicationInit(void)
 
 /*
   @Description
-   Generates and display the wave and also updates ADCC mode.
+   Generates and display the waveform and also updates ADCC mode.
   @Preconditions
     None
   @Param
@@ -118,18 +120,19 @@ void ApplicationInit(void)
  */
 void Application(void) 
 {
-    GenerateWave();
+    GenerateWaveform();
     
-    DisplayWave();
+    // Sample the waveform using ADCC
+    SampleWaveform();
     
-    UpdateADCCMode(); 
+    DisplayWaveform();
 }
 
 /*
   @Description
     Updates DAC value periodically as per configured time. 
     Frequency of the generated signal = 1/ (total number of points in one cycle * Timer0 period) 
-    1Hz Triangular wave is generated with 128 points and Timer0 period = 7.8 msec
+    1Hz Triangular waveform is generated with 128 points and Timer0 period = 7.8 msec
   @Preconditions
     None
   @Param
@@ -137,20 +140,22 @@ void Application(void)
   @Returns
     None      
  */
-void GenerateWave(void)
+void GenerateWaveform(void)
 {
-    if (isTimeToUpdateWave) 
+    if (isTimeToUpdateWaveform) 
     {
-        isTimeToUpdateWave = false;
+        isTimeToUpdateWaveform = false;
 
+        // Waveform is generated using DAC
         UpdateDac();
-        // DAC output is connected to OPA which amplifies the wave. 
+        
+        // DAC output is connected to OPA which amplifies the waveform. 
     }
 }
 
 /*
   @Description
-   Changes the DAC register to generate a wave. 
+   Changes the DAC register to generate a waveform. 
   @Preconditions
     None
   @Param
@@ -160,18 +165,19 @@ void GenerateWave(void)
  */
 void UpdateDac(void) 
 {  
+    // Update DAC with next point from LUT
     DAC1_SetOutput(*(LUT_ptr++));
     LUT_pointsCounter--;
     
-    if (LUT_pointsCounter <= 0) // If one wave cycle is completed
+    if (LUT_pointsCounter <= 0) // If one waveform cycle is completed
     {
-        ResetTriangularWave();
+        RestartTriangularWaveformCycle();
     }
 }
 
 /*
   @Description
-    Reset the wave cycle to the first point of triangular wave. Updates point counter.
+    Reset the waveform cycle to the first point of the waveform. Updates point counter.
   @Preconditions
     None
   @Param
@@ -179,16 +185,16 @@ void UpdateDac(void)
   @Returns
     None      
  */
-inline void ResetTriangularWave(void)
+inline void RestartTriangularWaveformCycle(void)
 {
-    // Reset the wave cycle to the first point of triangular wave
-    LUT_pointsCounter = NO_OF_POINTS_IN_TRIANGULAR_WAVE;
+    // Reset the waveform cycle to the first point of triangular waveform
+    LUT_pointsCounter = NO_OF_POINTS_IN_TRIANGULAR_WAVEFORM;
     LUT_ptr = triangleLUT;
 }
 
 /*
   @Description
-    Update the wave when new data is available.
+    Samples the waveform. Changes the sampling method on switch press
   @Preconditions
     None
   @Param
@@ -196,19 +202,26 @@ inline void ResetTriangularWave(void)
   @Returns
     None      
  */
-void DisplayWave(void)
+void SampleWaveform(void)
 {
-    if (isNewDataAvailable) 
+    // ADCC samples the waveform. 
+    // TMR0 triggers the ADCC without CPU intervention.
+
+    // Change the sampling method on switch press
+    if (isSwitchPressed)
     {
-        isNewDataAvailable = false;
-        
-        PlotGraphInDataVisualizer();                    
+        isSwitchPressed = false;
+
+        ChnageSamplingMethod();
+
+        // If sampling method is changed, restart the waveform cycle
+        RestartTriangularWaveformCycle();
     }
 }
 
 /*
   @Description
-    Plot the wave on Data Visualizer using UART
+    Notifies use regarding change of method. Update ADCC mode.
   @Preconditions
     None
   @Param
@@ -216,26 +229,18 @@ void DisplayWave(void)
   @Returns
     None      
  */
-void PlotGraphInDataVisualizer(void)
+void ChnageSamplingMethod(void)
 {
-    while (!(UART1.IsTxReady()));
-    UART1.Write(START_OF_FRAME);
-    
-    while (!(UART1.IsTxReady()));
-    UART1.Write((uint8_t)ADCC_GetFilterValue()); // Send low byte
-    
-    while (!(UART1.IsTxReady()));
-    UART1.Write((uint8_t)(ADCC_GetFilterValue() >> 8)); // Send high byte
-    
-    while (!(UART1.IsTxReady()));
-    UART1.Write(END_OF_FRAME);
+    LED0_Toggle();
+
+    UpdateADCCMode();
 }
 
 /*
   @Description
    Toggles ADCC mode between single ended and differential on switch press.
-   In single ended mode, ADCC input is the triangular wave generated by DAC1 and amplified by OPA.
-   In differential mode, ADCC input is the differential voltage of triangular wave and the offset 
+   In single ended mode, ADCC input is the triangular waveform generated by DAC1 and amplified by OPA.
+   In differential mode, ADCC input is the differential voltage of triangular waveform and the offset 
    voltage of 1.024V provided by DAC2.
   @Preconditions
     None
@@ -246,23 +251,14 @@ void PlotGraphInDataVisualizer(void)
  */ 
 void UpdateADCCMode(void)
 {
-    if (isSwitchPressed)
+    // Toggle ADCC mode between single ended and differential mode
+    if (GetADCCMode() == ADCC_DIFFERENTIAL_MODE)
     {
-        isSwitchPressed = false;
-
-        LED0_Toggle(); 
-
-        // Toggle ADCC mode between single ended and differential
-        if (GetADCCMode() == ADCC_DIFFERENTIAL_MODE)
-        {
-            SetADCCMode(ADCC_SINGLE_ENDED_MODE);
-        }
-        else 
-        {
-            SetADCCMode(ADCC_DIFFERENTIAL_MODE);
-        }
-
-        ResetTriangularWave();
+        SetADCCMode(ADCC_SINGLE_ENDED_MODE);
+    }
+    else
+    {
+        SetADCCMode(ADCC_DIFFERENTIAL_MODE);
     }
 }
 
@@ -335,6 +331,51 @@ inline void SetADCCNegativeChannel(adcc_negChannel_t channel)
 
 /*
   @Description
+    Update the waveform when new data is available.
+  @Preconditions
+    None
+  @Param
+    None
+  @Returns
+    None      
+ */
+void DisplayWaveform(void)
+{
+    if (isNewSampleDataAvailable) 
+    {
+        isNewSampleDataAvailable = false;
+        
+        PlotGraphInDataVisualizer();                    
+    }
+}
+
+/*
+  @Description
+    Plot the waveform on Data Visualizer using UART
+  @Preconditions
+    None
+  @Param
+    None
+  @Returns
+    None      
+ */
+void PlotGraphInDataVisualizer(void)
+{
+    while (!(UART1.IsTxReady()));
+    UART1.Write(START_OF_FRAME);
+    
+    while (!(UART1.IsTxReady()));
+    UART1.Write((uint8_t)ADCC_GetFilterValue()); // Send low byte
+    
+    while (!(UART1.IsTxReady()));
+    UART1.Write((uint8_t)(ADCC_GetFilterValue() >> 8)); // Send high byte
+    
+    while (!(UART1.IsTxReady()));
+    UART1.Write(END_OF_FRAME);
+}
+
+/*
+  @Description
     Interrupt handler routine for Timer0 overflow.
   @Preconditions
     None
@@ -345,7 +386,7 @@ inline void SetADCCNegativeChannel(adcc_negChannel_t channel)
  */
 void TMR0_UserInterruptHandler(void) 
 {
-    isTimeToUpdateWave = true;
+    isTimeToUpdateWaveform = true;
 }
 
 /*
@@ -361,7 +402,7 @@ void TMR0_UserInterruptHandler(void)
  */
 void ADCC_UserThresholdInterruptHandler(void) 
 {
-    isNewDataAvailable = true;
+    isNewSampleDataAvailable = true;
 }
 
 /*
