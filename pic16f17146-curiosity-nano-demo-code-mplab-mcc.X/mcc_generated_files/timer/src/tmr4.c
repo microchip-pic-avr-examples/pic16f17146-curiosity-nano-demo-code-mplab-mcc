@@ -59,8 +59,8 @@ void Timer4_Initialize(void){
     // Set TMR4 to the options selected in the User Interface
     // TCS FOSC/4; 
     T4CLKCON = 0x1;
-    // TMODE Starts on falling edge on TMR4_ers; TCKSYNC Not Synchronized; TCKPOL Rising Edge; TPSYNC Not Synchronized; 
-    T4HLT = 0x12;
+    // TMODE Starts on rising edge on TMR4_ers; TCKSYNC Not Synchronized; TCKPOL Rising Edge; TPSYNC Not Synchronized; 
+    T4HLT = 0x11;
     // TRSEL T4INPPS pin; 
     T4RST = 0x0;
     // PR 195; 

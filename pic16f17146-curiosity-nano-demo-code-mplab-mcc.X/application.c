@@ -30,11 +30,11 @@ typedef enum{
     ADCC_DIFFERENTIAL_MODE   
 }adcc_mode_t;
 
-void GenerateWaveform(void);
+inline void GenerateWaveform(void);
 void UpdateDac(void); 
 inline void RestartTriangularWaveformCycle(void);
-void SampleWaveform(void);
-void DisplayWaveform(void);
+inline void SampleWaveform(void);
+inline void DisplayWaveform(void);
 void PlotGraphInDataVisualizer(void);
 void ChnageSamplingMethod(void);
 void UpdateADCCMode(void);
@@ -110,7 +110,7 @@ void ApplicationInit(void)
 
 /*
   @Description
-   Generates and display the waveform and also updates ADCC mode.
+   Generates and display the waveform and also updates ADCC mode. 
   @Preconditions
     None
   @Param
@@ -140,7 +140,7 @@ void Application(void)
   @Returns
     None      
  */
-void GenerateWaveform(void)
+inline void GenerateWaveform(void)
 {
     if (isTimeToUpdateWaveform) 
     {
@@ -194,7 +194,7 @@ inline void RestartTriangularWaveformCycle(void)
 
 /*
   @Description
-    Samples the waveform. Changes the sampling method on switch press
+    Samples the waveform. Changes the sampling method on switch press.
   @Preconditions
     None
   @Param
@@ -202,7 +202,7 @@ inline void RestartTriangularWaveformCycle(void)
   @Returns
     None      
  */
-void SampleWaveform(void)
+inline void SampleWaveform(void)
 {
     // ADCC samples the waveform. 
     // TMR0 triggers the ADCC without CPU intervention.
@@ -339,7 +339,7 @@ inline void SetADCCNegativeChannel(adcc_negChannel_t channel)
   @Returns
     None      
  */
-void DisplayWaveform(void)
+inline void DisplayWaveform(void)
 {
     if (isNewSampleDataAvailable) 
     {

@@ -101,6 +101,16 @@ Press the on-board switch SW0 to switch ADCC mode to single ended. LED0 is turne
 
 LED0 toggles on each switch press as ADCC switches between single-ended and differential mode.
 
+### Voltage Supply Configuration
+
+Due to a target voltage other than 3.3 V, the user might observe different ADCC output than mentioned above. For correct operation, set the target voltage to 3.3V. Target voltage can be set through the MPLAB® X IDE project properties, as shown below.
+
+![target-voltage](images/target-voltage.png)
+
+*Note : The factory default target voltage is 3.3V*
+
+The voltage settings setup in MPLAB® X IDE is not applied immediately to the board. The new voltage setting is applied to the board when accessing the debugger, like pushing the Refresh Debug Tool Status button in the project dashboard tab or programming/reading program memory. Refer PIC16F17146 CNANO Hardware User Guide for more details.
+
 ## Peripheral Configuration using MCC
 This section explains how to configure the peripherals using MPLAB X IDE with MCC plugin for recreation of the project.
 
@@ -120,7 +130,7 @@ Additional Links: [MCC Melody Technical Reference](https://onlinedocs.microchip.
 |    OPA                    |    Enable Op Amp <br> Op Amp Configuration – Non-Inverting Programmable Gain Amplifier <br><br>Positive Channel – DAC1_OUT <br>Negative Channel – GSEL <br> Negative Source Selection – Vss <br><br>Internal Resistor Ladder Selection – R2/R1 = 1         |    Amplifies DAC output (Triangular Waveform)|
 |    TMR0           |    Disable Timer<br>   Clock Prescaler  – 1:128<br> Clock Source – FOSC/4<br>Enable   Synchronisation<br>        Requested   Period – 0.0078 s s<br><br>   Enable TMR Interrupt|    Used to update DAC1                                |
 |    TMR2                   |    Disable Timer<br>Control Mode – Roll over pulse <br>Start/Reset Option – Software control<br>  <br>Clock Source – MFINTOSC 32khz<br> Prescaler – 1:16 <br>Postscaler – 1:2 <br><br> Time Period – 0.002 |    Auto Triggers ADCC                                                       |
-|    TMR4                   |    Enable Timer<br>Control Mode – Monostable <br>Start/Reset Option – T4INPPS<br>Start/Reset Option – Starts on falling edge on TMR4_ers<br> <br>Clock Source – FOSC/4<br> Prescaler – 1:128 <br><br> Time Period – 0.1 <br><br> Enable TMR Interrupt |    Switch debouncing                                                   |
+|    TMR4                   |    Enable Timer<br>Control Mode – Monostable <br>Start/Reset Option – T4INPPS<br>Start/Reset Option – Starts on rising edge on TMR4_ers<br> <br>Clock Source – FOSC/4<br> Prescaler – 1:128 <br><br> Time Period – 0.1 <br><br> Enable TMR Interrupt |    Switch debouncing                                                   |
 |    EUSART1                 |    *UART1 Driver*<br>Requested Baudrate –   19200 <br> UART PLIB Selector – EUSART1<br><br> *EUSART1 PLIB* <br>    Enable Redirect   STDIO to EUSART    <br>Enable   Receive<br>  Enable Transmit<br>   Enable Serial   Port                                                                                                                                                                                              |    Sends data to   Data Visualizer                                              |
 
 ##### Peripheral Configuration using MCC
