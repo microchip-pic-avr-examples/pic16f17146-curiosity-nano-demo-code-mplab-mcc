@@ -8,17 +8,17 @@ This example demonstrates the working of a 12-bit Analog to Digital Converter wi
 ![objective](images/objective.png)
 
 ## Related Documentation
--	[PIC16F17146 Product Page](https://www.microchip.com/DS40002343)
--	[PIC16F17146 Data Sheet](https://www.microchip.com/DS40002339)
+-	[PIC16F17146 Product Page](https://www.microchip.com/en-us/product/PIC16F17146)
+-	[PIC16F17146 Data Sheet](https://www.microchip.com/DS40002343)
 
 ## Software Used
 - MPLAB® X IDE [6.00 or newer](https://www.microchip.com/mplab/mplab-x-ide)
-- Microchip XC8 Compiler [2.35 or newer](https://www.microchip.com/mplab/compilers)
-- MPLAB® Code Configurator (MCC) [5.1.1 or newer](https://www.microchip.com/mplab/mplab-code-configurator)
-- Microchip PIC16F1xxxx Series Device Support (DFP) [1.13.178 or newer](https://packs.download.microchip.com/)
+- Microchip XC8 Compiler [2.40 or newer](https://www.microchip.com/mplab/compilers)
+- MPLAB® Code Configurator (MCC) [5.1.9 or newer](https://www.microchip.com/mplab/mplab-code-configurator)
+- Microchip PIC16F1xxxx Series Device Support (DFP) [1.14.187 or newer](https://packs.download.microchip.com/)
 
 ## Hardware Used
--	[PIC16F17146 Curiosity Nano Board](https://www.microchip.com)
+-	[PIC16F17146 Curiosity Nano Board](https://www.microchip.com/en-us/development-tool/EV72J15A)
 
 ## Setup
 
@@ -122,15 +122,15 @@ Additional Links: [MCC Melody Technical Reference](https://onlinedocs.microchip.
 
 |    Module                  |    Configuration                                                                                                                                                                                                                                                                                                                                                       |    Usage                                                                   |
 |--------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
-|    Clock Control           |    Clock Source   – HFINTOSC<br>   HF Internal Clock – 1 MHz<br>   Clock Divider – 1                                                                   |    System clock                                               
-|    ADCC                    |    Enable ADCC<br>   Input   Configuration – Differential Mode<br>   Operating   Mode – Burst average Mode<br>   Result   Alignment – Right justified, two's compliment<br>   Positive   Reference – FVR<br>Auto-conversion Trigger – TMR2 <br>    <br>Clock Source – FOSC<br>Clock Divider – FOSC/2  <br><br>Threshold Interrupt Mode – enabled <br>Repeat – 16 <br> Accumulator Right Shift – 4   <br><br>Enable ADTI Interrupt       |    Samples OPA's output                                           |
+|    Clock Control           |    Clock Source – HFINTOSC<br>   HF Internal Clock – 4 MHz<br>   Clock Divider – 1                                                                   |    System clock                                               
+|    ADCC                    |    Enable ADCC<br>   Input   Configuration – Differential Mode<br>   Operating   Mode – Burst average Mode<br>   Result   Alignment – Right justified, two's compliment<br>   Positive   Reference – FVR<br>Auto-conversion Trigger – TMR2 <br>    <br>Clock Source – FOSC<br>Clock Divider – FOSC/4  <br><br>Threshold Interrupt Mode – enabled <br>Repeat – 16 <br> Accumulator Right Shift – 4   <br><br>Enable ADTI Interrupt       |    Samples OPA's output                                           |
 |    DAC1                    |  Enable DAC<br>   DAC Positive Reference Selection – FVR<br>   DAC Negative Reference Selection – VSS          |    Generates Triangular Waveform                                           |
 |    DAC2                    |  VDD – 3.3 <br> Required ref – 1.024<br><br>  Enable DAC<br>   DAC Positive Reference Selection – FVR  <br> DAC Negative Reference Selection – VSS        |    Connects to ADCC negative channel     
 |    FVR                    |    FVR buffer 1 Gain – 2x <br> FVR buffer 2 Gain – 1x            |    Provides reference voltage for ADCC and DAC
 |    OPA                    |    Enable Op Amp <br> Op Amp Configuration – Non-Inverting Programmable Gain Amplifier <br><br>Positive Channel – DAC1_OUT <br>Negative Channel – GSEL <br> Negative Source Selection – Vss <br><br>Internal Resistor Ladder Selection – R2/R1 = 1         |    Amplifies DAC output (Triangular Waveform)|
 |    TMR0           |    Disable Timer<br>   Clock Prescaler  – 1:128<br> Clock Source – FOSC/4<br>Enable   Synchronisation<br>        Requested   Period – 0.0078 s s<br><br>   Enable TMR Interrupt|    Used to update DAC1                                |
 |    TMR2                   |    Disable Timer<br>Control Mode – Roll over pulse <br>Start/Reset Option – Software control<br>  <br>Clock Source – MFINTOSC 32khz<br> Prescaler – 1:16 <br>Postscaler – 1:2 <br><br> Time Period – 0.002 |    Auto Triggers ADCC                                                       |
-|    TMR4                   |    Enable Timer<br>Control Mode – Monostable <br>Start/Reset Option – T4INPPS<br>Start/Reset Option – Starts on rising edge on TMR4_ers<br> <br>Clock Source – FOSC/4<br> Prescaler – 1:128 <br><br> Time Period – 0.1 <br><br> Enable TMR Interrupt |    Switch debouncing                                                   |
+|    TMR4                   |    Enable Timer<br>Control Mode – Monostable <br>Start/Reset Option – T4INPPS<br>Start/Reset Option – Starts on rising edge on TMR4_ers<br> <br>Clock Source – MFINTOSC 32kHz<br> Prescaler – 1:16 <br><br> Time Period – 0.1 <br><br> Enable TMR Interrupt |    Switch debouncing                                                   |
 |    EUSART1                 |    *UART1 Driver*<br>Requested Baudrate –   19200 <br> UART PLIB Selector – EUSART1<br><br> *EUSART1 PLIB* <br>    Enable Redirect   STDIO to EUSART    <br>Enable   Receive<br>  Enable Transmit<br>   Enable Serial   Port                                                                                                                                                                                              |    Sends data to   Data Visualizer                                              |
 
 ##### Peripheral Configuration using MCC

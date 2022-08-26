@@ -5,7 +5,7 @@
  * 
  * @ingroup tmr0
  * 
- * @brief This is the generated driver implementation file for the TMR0 driver
+ * @brief  Driver implementation for the TMR0 driver
  *
  * @version TMR0 Driver Version 2.0.2
 */
@@ -48,8 +48,8 @@ static void Timer0_DefaultOverflowCallback(void);
 
 void Timer0_Initialize(void)
 {
-    //TMR0H 14; 
-    TMR0H = 0xE;
+    //TMR0H 59; 
+    TMR0H = 0x3B;
 
     //TMR0L 0; 
     TMR0L = 0x0;

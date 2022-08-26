@@ -1,5 +1,5 @@
 /** 
- * TMR2 Generated Driver API Header File
+ * TMR Generated Driver API Header File
  *
  * @file timer_interface.h
  *  
@@ -8,7 +8,7 @@
  * @brief This header file provides interfaces to Timer APIs.
  *
  * @version TMR_interface Version 1.0.1
-*/
+ */
 
 /*
 © [2022] Microchip Technology Inc. and its subsidiaries.

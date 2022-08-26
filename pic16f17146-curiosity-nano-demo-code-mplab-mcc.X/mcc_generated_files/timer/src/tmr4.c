@@ -5,7 +5,7 @@
  * 
  * @ingroup  tmr4
  * 
- * @brief This is the generated driver implementation file for the TMR4 module.
+ * @brief API implementations for the TMR4 module.
  *
  * @version TMR4 Driver Version 3.0.1
  */
@@ -57,14 +57,14 @@ static void Timer4_DefaultOverflowCallback(void);
 void Timer4_Initialize(void){
 
     // Set TMR4 to the options selected in the User Interface
-    // TCS FOSC/4; 
-    T4CLKCON = 0x1;
+    // TCS MFINTOSC 32khz; 
+    T4CLKCON = 0x6;
     // TMODE Starts on rising edge on TMR4_ers; TCKSYNC Not Synchronized; TCKPOL Rising Edge; TPSYNC Not Synchronized; 
     T4HLT = 0x11;
     // TRSEL T4INPPS pin; 
     T4RST = 0x0;
-    // PR 195; 
-    T4PR = 0xC3;
+    // PR 204; 
+    T4PR = 0xCC;
     // TMR 0x0; 
     T4TMR = 0x0;
 
@@ -75,8 +75,8 @@ void Timer4_Initialize(void){
      PIR2bits.TMR4IF = 0;
     // Enabling TMR4 interrupt.
      PIE2bits.TMR4IE = 1;
-    // TCKPS 1:128; TMRON on; TOUTPS 1:1; 
-    T4CON = 0xF0;
+    // TCKPS 1:16; TMRON on; TOUTPS 1:1; 
+    T4CON = 0xC0;
 }
 
 void Timer4_ModeSet(Timer4_HLT_MODE mode)

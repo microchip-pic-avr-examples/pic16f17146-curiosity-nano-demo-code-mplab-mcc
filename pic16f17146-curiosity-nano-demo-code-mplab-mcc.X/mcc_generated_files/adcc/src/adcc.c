@@ -67,8 +67,8 @@ void ADCC_Initialize(void)
     ADPCH = 0x0;
     //ADCHS ANA0; 
     ADNCH = 0x0;
-    //ADACQL 3; 
-    ADACQL = 0x3;
+    //ADACQL 12; 
+    ADACQL = 0xC;
     //ADACQH 0; 
     ADACQH = 0x0;
     //ADCAP Additional uC disabled; 
@@ -95,8 +95,8 @@ void ADCC_Initialize(void)
     ADREF = 0x3;
     //ADACT TMR2; 
     ADACT = 0x4;
-    //ADCCS FOSC/2; 
-    ADCLK = 0x0;
+    //ADCCS FOSC/4; 
+    ADCLK = 0x1;
     //GO_nDONE undefined; ADIC differential mode; ADFM right justified, two's compliment; ADCS FOSC; ADCONT disabled; ADON enabled; 
     ADCON0 = 0x86;
     

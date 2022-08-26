@@ -100,8 +100,8 @@ void EUSART1_Initialize(void)
     RC1STA = 0x90; 
     //TX9D 0x0; BRGH hi_speed; SENDB sync_break_complete; SYNC asynchronous; TXEN enabled; TX9 8-bit; CSRC client; 
     TX1STA = 0x26; 
-    //SPBRGL 12; 
-    SP1BRGL = 0xC; 
+    //SPBRGL 51; 
+    SP1BRGL = 0x33; 
     //SPBRGH 0; 
     SP1BRGH = 0x0; 
 
