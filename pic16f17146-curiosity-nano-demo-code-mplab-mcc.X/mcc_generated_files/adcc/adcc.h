@@ -10,7 +10,7 @@
  * @version ADCC Driver Version 1.0.1
 */
 /*
-© [2022] Microchip Technology Inc. and its subsidiaries.
+© [2023] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -75,6 +75,7 @@ typedef enum
 */
 typedef enum
 {
+    nChannel_OPA1OUT =  0x39,
     nChannel_VSS =  0x3a,
     nChannel_Temp =  0x3b,
     nChannel_DAC1OUT =  0x3c,

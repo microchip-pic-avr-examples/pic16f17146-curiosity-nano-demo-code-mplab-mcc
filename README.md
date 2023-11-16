@@ -12,10 +12,10 @@ This example demonstrates the working of a 12-bit Analog to Digital Converter wi
 -	[PIC16F17146 Data Sheet](https://www.microchip.com/DS40002343)
 
 ## Software Used
-- MPLAB® X IDE [6.00 or newer](https://www.microchip.com/mplab/mplab-x-ide)
-- Microchip XC8 Compiler [2.40 or newer](https://www.microchip.com/mplab/compilers)
-- MPLAB® Code Configurator (MCC) [5.1.9 or newer](https://www.microchip.com/mplab/mplab-code-configurator)
-- Microchip PIC16F1xxxx Series Device Support (DFP) [1.14.187 or newer](https://packs.download.microchip.com/)
+- [ MPLAB® X IDE 6.15 ](https://www.microchip.com/mplab/mplab-x-ide) or newer
+- [Microchip XC8 Compiler 2.45 ](https://www.microchip.com/mplab/compilers) or newer
+- [MPLAB® Code Configurator (MCC) 5.3.7 ](https://www.microchip.com/mplab/mplab-code-configurator) or newer
+- [Microchip PIC16F1xxxx Series Device Support (DFP) 1.22.376 ](https://packs.download.microchip.com/) or newer
 
 ## Hardware Used
 -	[PIC16F17146 Curiosity Nano Board](https://www.microchip.com/en-us/development-tool/EV72J15A)
@@ -33,13 +33,25 @@ The implementation of this example is carried out in 4 stages.
 - Sampling of OPA output using ADCC (in either single ended or differential mode)
 - Printing ADCC results in graphical format using data visualizer.
 
+![block-diagram](images/block-diagram.png)
+
+
+### Pin Connection Table
+
+| Pin | Signal Description                    
+| --- | -------------------                        
+| RB5 |  EUSART RX
+| RB7 |  EUSART TX         
+| RC0 |  Switch SW0           
+| RC1 |  LED0                 
+
 
 ### Generation of Triangular wave
 The PIC16F17146 microcontroller has 2 DAC modules. DAC1 is used to generate a triangular wave with a frequency of 1Hz. The frequency of the generated signal is decided by the DAC register update frequency which is controlled by the Timer0 interrupt. The frequency can be changed by changing the Timer0 period. The FVR is a stable voltage reference with 1.024V, 2.048V or 4.096V selectable output levels and can be configured to supply a reference voltage to analog peripherals. FVR2 Buffer provides a reference voltage of 1.024V to DAC2.
 
 Frequency of the generated signal = 1/ (total number of points in one cycle * Timer0 period)`
 
-The 8-bit DAC has 128 voltage level ranges, where each level is determined by the DAC register values that vary between 0-255. In one cycle of the signal, the DAC register updates between 0 to 255 and back to 0. The total number of points in one cycle of the triangular wave is the number of times the DAC register is updated in one cycle. In this example DAC register increments by 4 in each update, therefore the total number of points in one cycle will be 128.
+The 8-bit DAC has 256 voltage level ranges, where each level is determined by the DAC register values that vary between 0-255. In one cycle of the signal, the DAC register updates between 0 to 255 and back to 0. The total number of points in one cycle of the triangular wave is the number of times the DAC register is updated in one cycle. In this example DAC register increments by 4 in each update, therefore the total number of points in one cycle will be 128.
 
 ### Amplification of signal
 The generated signal is amplified using OPA with a gain of 2. OPA is configured in non-inverting amplifier mode and gain is set using internal resistor ladder feedback. The amplified signal is fed to the positive ADCC channel in both single ended and differential mode.
@@ -54,18 +66,6 @@ In single ended mode of ADCC, the negative ADCC channel is connected to VSS. The
 
 ### Printing ADCC Results
 The ADCC results are sent through UART and further displayed on the time plot window of the data visualizer. Refer [Steps to open Time Plot window in Data Visualizer](https://github.com/microchip-pic-avr-examples/pic16f17146-curiosity-nano-demo-code-mplab-mcc#steps-to-open-time-plot-window-in-data-visualizer) for viewing results in data visualizer.
-
-![block-diagram](images/block-diagram.png)
-
-
-## Pin Connection Table
-
-| Pin | Signal Description                    
-| --- | -------------------                        
-| RB5 |  EUSART RX
-| RB7 |  EUSART TX         
-| RC0 |  Switch SW0           
-| RC1 |  LED0                 
 
 ### Steps to open Time Plot window in Data Visualizer
 To visualize the ADCC readings in graphical format, time plot of Data Visualizer is used. Follow below mentioned procedure to open Graph/Time plot in Data Visualizer.
@@ -109,7 +109,7 @@ Due to a target voltage other than 3.3 V, the user might observe different ADCC 
 
 *Note : The factory default target voltage is 3.3V*
 
-The voltage settings setup in MPLAB® X IDE is not applied immediately to the board. The new voltage setting is applied to the board when accessing the debugger, like pushing the Refresh Debug Tool Status button in the project dashboard tab or programming/reading program memory. Refer PIC16F17146 CNANO Hardware User Guide for more details.
+The voltage settings setup in MPLAB® X IDE is not applied immediately to the board. The new voltage setting is applied to the board when accessing the debugger, like pushing the Refresh Debug Tool Status button in the project dashboard tab or programming/reading program memory. Refer [PIC16F17146 CNANO Hardware User Guide](https://www.microchip.com/DS50003388) for more details.
 
 ## Peripheral Configuration using MCC
 This section explains how to configure the peripherals using MPLAB X IDE with MCC plugin for recreation of the project.
@@ -126,55 +126,14 @@ Additional Links: [MCC Melody Technical Reference](https://onlinedocs.microchip.
 |    ADCC                    |    Enable ADCC<br>   Input   Configuration – Differential Mode<br>   Operating   Mode – Burst average Mode<br>   Result   Alignment – Right justified, two's compliment<br>   Positive   Reference – FVR<br>Auto-conversion Trigger – TMR2 <br>    <br>Clock Source – FOSC<br>Clock Divider – FOSC/4  <br><br>Threshold Interrupt Mode – enabled <br>Repeat – 16 <br> Accumulator Right Shift – 4   <br><br>Enable ADTI Interrupt       |    Samples OPA's output                                           |
 |    DAC1                    |  Enable DAC<br>   DAC Positive Reference Selection – FVR<br>   DAC Negative Reference Selection – VSS          |    Generates Triangular Waveform                                           |
 |    DAC2                    |  VDD – 3.3 <br> Required ref – 1.024<br><br>  Enable DAC<br>   DAC Positive Reference Selection – FVR  <br> DAC Negative Reference Selection – VSS        |    Connects to ADCC negative channel     
-|    FVR                    |    FVR buffer 1 Gain – 2x <br> FVR buffer 2 Gain – 1x            |    Provides reference voltage for ADCC and DAC
-|    OPA                    |    Enable Op Amp <br> Op Amp Configuration – Non-Inverting Programmable Gain Amplifier <br><br>Positive Channel – DAC1_OUT <br>Negative Channel – GSEL <br> Negative Source Selection – Vss <br><br>Internal Resistor Ladder Selection – R2/R1 = 1         |    Amplifies DAC output (Triangular Waveform)|
-|    TMR0           |    Disable Timer<br>   Clock Prescaler  – 1:128<br> Clock Source – FOSC/4<br>Enable   Synchronisation<br>        Requested   Period – 0.0078 s s<br><br>   Enable TMR Interrupt|    Used to update DAC1                                |
+|    FVR                    |  Enable FVR <br>  FVR buffer 1 Gain – 2x <br> FVR buffer 2 Gain – 1x            |    Provides reference voltage for ADCC and DAC
+|    OPA                    |    Enable Op Amp <br> Op Amp Configuration – Non-Inverting Programmable Gain Amplifier <br><br>Positive Channel – DAC1_OUT <br>Negative Channel – GSEL <br> Negative Source Selection – Vss <br><br>Internal Resistor Ladder Selection – R2/R1 = 1         |     Amplifies DAC output (Triangular Waveform)|
+|    TMR0           |    Disable Timer<br>   Clock Prescaler  – 1:128<br> Timer Mode - 8bit<br> Clock Source – FOSC/4<br>Enable   Synchronisation<br>        Requested   Period – 0.0078 s s<br><br>   Enable TMR Interrupt|    Used to update DAC1                                |
 |    TMR2                   |    Disable Timer<br>Control Mode – Roll over pulse <br>Start/Reset Option – Software control<br>  <br>Clock Source – MFINTOSC 32khz<br> Prescaler – 1:16 <br>Postscaler – 1:2 <br><br> Time Period – 0.002 |    Auto Triggers ADCC                                                       |
-|    TMR4                   |    Enable Timer<br>Control Mode – Monostable <br>Start/Reset Option – T4INPPS<br>Start/Reset Option – Starts on rising edge on TMR4_ers<br> <br>Clock Source – MFINTOSC 32kHz<br> Prescaler – 1:16 <br><br> Time Period – 0.1 <br><br> Enable TMR Interrupt |    Switch debouncing                                                   |
+|    TMR4                   |    Enable Timer<br>Control Mode – Monostable <br>External Reset Source – T4INPPS<br>Start/Reset Option – Starts on rising edge on TMR4_ers<br> <br>Clock Source – MFINTOSC 32kHz<br> Prescaler – 1:16 <br> Postscaler – 1:1 <br><br> Time Period – 0.1 <br><br> Enable TMR Interrupt |    Switch debouncing                                                   |
 |    EUSART1                 |    *UART1 Driver*<br>Requested Baudrate –   19200 <br> UART PLIB Selector – EUSART1<br><br> *EUSART1 PLIB* <br>    Enable Redirect   STDIO to EUSART    <br>Enable   Receive<br>  Enable Transmit<br>   Enable Serial   Port                                                                                                                                                                                              |    Sends data to   Data Visualizer                                              |
 
-##### Peripheral Configuration using MCC
-###### Clock Control
-![clock-control](images/clock-control.png)
-
-###### ADCC
-![adcc-1](images/adcc-1.png)
-![adcc-2](images/adcc-2.png)
-
-###### DAC1
-![dac1](images/dac1.png)
-
-###### DAC2
-![dac2](images/dac2.png)
-
-###### FVR
-![fvr](images/fvr.png)
-
-###### OPA
-![opa](images/opa.png)
-
-###### TMR0
-![tmr0](images/tmr0.png)
-
-###### TMR2
-![tmr2](images/tmr2.png)
-
-###### TMR4
-![tmr4](images/tmr4.png)
-
-###### UART1 Driver
-![uart1](images/uart1.png)
-
-###### EUSART1 PLIB
-![eusart1](images/eusart1.png)
-
-*Note: The on-board debugger present on curiosity nano board has a virtual serial port (CDC) is connected to EUSART on the PIC16F17146 and provides an easy way to communicate with the target application through terminal software. Refer curiosity nano board user guide for more details.*
-
-###### Pins
-![pins](images/pins.png)
-
-###### Pin Grid View
-![pin-grid-view](images/pin-grid-view.png)
+*Note: The on-board debugger present on curiosity nano board has a virtual serial port (CDC) is connected to EUSART on the PIC16F17146 and provides an easy way to communicate with the target application through terminal software. Refer [PIC16F17146 CNANO Hardware User Guide]((https://www.microchip.com/DS50003388) for more details.*
 
 ## Summary
 This example demonstrates the working of 12-bit ADCC of PIC16F17146 in differential mode and single ended mode using Curiosity Nano board. The analog peripherals such as OPA, DAC and FVR can be internally connected, thus eliminating the need of external connections.

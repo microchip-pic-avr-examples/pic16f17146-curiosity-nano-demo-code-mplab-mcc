@@ -10,7 +10,7 @@
  * @version DAC1 Driver Version 2.1.0
 */
 /*
-© [2022] Microchip Technology Inc. and its subsidiaries.
+© [2023] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -41,24 +41,24 @@
   Section: DAC1 APIs
 */
 
-void DAC1_Initialize(void) {
- 
+void DAC1_Initialize(void) 
+{ 
     //DACPSS FVR; DACNSS VSS; DACOE DACOUT1 and DACOUT2 are Disabled; DACEN enabled; 
     DAC1CON =  136;
 
     //DACR 250; 
-    DAC1DATL =  250; 
+    DAC1DATL =  250;     
 }
 
-void DAC1_SetOutput(uint8_t inputData) {
- 
+void DAC1_SetOutput(uint8_t inputData) 
+{
     DAC1DATL =  inputData;
 }
-
-uint8_t DAC1_GetOutput(void) {
- 
+uint8_t DAC1_GetOutput(void) 
+{
     return DAC1DATL;
 }
+
 /**
  End of File
 */

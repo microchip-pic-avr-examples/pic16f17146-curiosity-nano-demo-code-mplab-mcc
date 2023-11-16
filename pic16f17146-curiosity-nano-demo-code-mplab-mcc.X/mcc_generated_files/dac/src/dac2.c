@@ -10,7 +10,7 @@
  * @version DAC2 Driver Version 2.1.0
 */
 /*
-© [2022] Microchip Technology Inc. and its subsidiaries.
+© [2023] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -41,24 +41,24 @@
   Section: DAC2 APIs
 */
 
-void DAC2_Initialize(void) {
- 
-    //DACPSS VDD; DACNSS VSS; DACOE DACOUT1 and DACOUT2 are Disabled; DACEN enabled; 
+void DAC2_Initialize(void) 
+{ 
+    //DACPSS VDD; DACNSS VSS; DACEN enabled; 
     DAC2CON =  128;
 
     //DACR 79; 
-    DAC2DATL =  79; 
+    DAC2DATL =  79;     
 }
 
-void DAC2_SetOutput(uint8_t inputData) {
- 
+void DAC2_SetOutput(uint8_t inputData) 
+{
     DAC2DATL =  inputData;
 }
-
-uint8_t DAC2_GetOutput(void) {
- 
+uint8_t DAC2_GetOutput(void) 
+{
     return DAC2DATL;
 }
+
 /**
  End of File
 */
